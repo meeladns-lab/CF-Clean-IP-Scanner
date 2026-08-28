@@ -550,4 +550,27 @@ def main(page: ft.Page):
     ScannerUI(page)
 
 if __name__ == "__main__":
-    ft.app(target=main, assets_dir="assets")
+    # Flet 0.86+: app() deprecated -> use run(); handle Iran throttling where flet_desktop binary download is slow/blocked
+    import sys
+    is_frozen = getattr(sys, 'frozen', False)
+    # Prefer WEB_BROWSER in frozen exe (PyInstaller) to avoid needing flet_desktop download; native FLET_APP for dev
+    view = ft.AppView.WEB_BROWSER if is_frozen else ft.AppView.FLET_APP
+    assets = "assets"
+    # Try ft.run if available (new API), else ft.app
+    runner = getattr(ft, 'run', None) or getattr(ft, 'app')
+    try:
+        runner(target=main, view=view, assets_dir=assets, port=8599)
+    except TypeError:
+        # older signature without assets_dir/port
+        try:
+            runner(target=main, view=view)
+        except Exception as e:
+            print(f"Runner failed ({e}), trying fallback WEB_BROWSER...")
+            runner(target=main, view=ft.AppView.WEB_BROWSER)
+    except Exception as e:
+        print(f"View {view} failed ({e}), falling back to WEB_BROWSER...")
+        try:
+            runner(target=main, view=ft.AppView.WEB_BROWSER, assets_dir=assets, port=8599)
+        except Exception as e2:
+            print(f"WEB_BROWSER also failed: {e2}")
+            raise
