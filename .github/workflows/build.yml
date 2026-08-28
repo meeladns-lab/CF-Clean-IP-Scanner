@@ -1,0 +1,53 @@
+name: Build Windows + Android
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: pip install -r requirements.txt flet pyinstaller
+      - name: Build Windows exe (PyInstaller — no Flutter needed)
+        run: |
+          python -m PyInstaller --name CF-Clean-IP-Scanner --windowed --onefile --add-data "assets;assets" --add-data "config.json;." --hidden-import cf_scanner --hidden-import cf_scanner.fetch --hidden-import cf_scanner.prober --hidden-import cf_scanner.colo --hidden-import cf_scanner.speedtest --hidden-import cf_scanner.sampler --hidden-import cf_scanner.ranker --hidden-import cf_scanner.reporter --hidden-import cf_scanner.config --collect-all flet app.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CF-Clean-IP-Scanner-Windows
+          path: dist/CF-Clean-IP-Scanner.exe
+
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.x'
+          channel: 'stable'
+      - name: Setup Java (for Android)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - name: Install deps
+        run: pip install -r requirements.txt flet
+      - name: Flutter doctor
+        run: flutter doctor -v
+      - name: Build APK (debug)
+        run: flet build apk --verbose
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CF-Clean-IP-Scanner-Android-APK
+          path: build/apk/*.apk
+      # For release AAB: flet build aab --verbose
