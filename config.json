@@ -1,0 +1,42 @@
+{
+  "cloudflare_ips_v4_url": "https://www.cloudflare.com/ips-v4",
+  "cloudflare_ips_v6_url": "https://www.cloudflare.com/ips-v6",
+  "cloudflare_api_url": "https://api.cloudflare.com/client/v4/ips",
+  "fallback_ipv4_cidrs": [
+    "173.245.48.0/20",
+    "103.21.244.0/22",
+    "103.22.200.0/22",
+    "103.31.4.0/22",
+    "141.101.64.0/18",
+    "108.162.192.0/18",
+    "190.93.240.0/20",
+    "188.114.96.0/20",
+    "197.234.240.0/22",
+    "198.41.128.0/17",
+    "162.158.0.0/15",
+    "104.16.0.0/13",
+    "104.24.0.0/14",
+    "172.64.0.0/13",
+    "131.0.72.0/22"
+  ],
+  "fallback_ipv6_cidrs": [
+    "2400:cb00::/32",
+    "2606:4700::/32",
+    "2803:f800::/32",
+    "2405:b500::/32",
+    "2405:8100::/32",
+    "2a06:98c0::/29",
+    "2c0f:f248::/32"
+  ],
+  "tls_ports": [443, 2053, 2083, 2087, 2096, 8443],
+  "plain_ports": [80, 2052, 2082, 2086, 2095, 8080],
+  "all_ports": [80, 443, 2052, 2053, 2082, 2083, 2086, 2087, 2095, 2096, 8443, 8080],
+  "default_ports": [443, 2053, 2083, 8443],
+  "default_probes": 3,
+  "default_timeout": 3.0,
+  "default_threads": 100,
+  "default_dl_bytes": 10000000,
+  "default_ul_bytes": 5000000,
+  "sni_host": "www.cloudflare.com",
+  "speed_host": "speed.cloudflare.com"
+}
