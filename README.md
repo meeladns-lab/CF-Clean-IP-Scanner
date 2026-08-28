@@ -38,19 +38,39 @@ UI includes:
 
 ## Build — Windows (.exe)
 
-**No Flutter needed** (PyInstaller):
+**Fixed:** `app didn't start` was due to Flet desktop client needing a 45MB download (blocked/throttled in Iran). Now fixed — Tk version works offline.
+
+Two Windows builds (see `build_windows.ps1`):
+
+**Recommended — Tk (no Flutter, works offline):**
 ```bash
-pip install pyinstaller flet
-powershell -ExecutionPolicy Bypass -File build_windows.ps1
-# or manually:
-python -m PyInstaller --name CF-Clean-IP-Scanner --windowed --onefile --add-data "assets;assets" --add-data "config.json;." --collect-all flet app.py
-# output: dist/CF-Clean-IP-Scanner.exe  (~15 MB)
+pip install pyinstaller
+python -m PyInstaller --name CF-Clean-IP-Scanner --windowed --onefile --add-data "assets;assets" --add-data "config.json;." app_tk.py
+# output: dist/CF-Clean-IP-Scanner.exe  (~12.5 MB) + dist/CF-Clean-IP-Scanner-Tk.exe
+# GUI: tkinter/ttk — guaranteed to start, same scanner backend
 ```
 
-`flet pack` alternative (needs Flutter):
+**Modern — Flet (needs Flutter DL, auto-fallback to browser):**
+```bash
+pip install pyinstaller flet flet-desktop
+python -m PyInstaller --name CF-Clean-IP-Scanner-Flet --windowed --onefile --add-data "assets;assets" --add-data "config.json;." --collect-all flet --collect-all flet_desktop app.py
+# output: dist/CF-Clean-IP-Scanner-Flet.exe (~17 MB)
+# Fix: app.py now auto-detects frozen exe and uses WEB_BROWSER view to avoid download hang
+```
+
+`flet pack` alternative (needs Flutter SDK):
 ```bash
 flet pack app.py --name "CF Clean IP Scanner" --icon assets/icon.png --distpath dist
 ```
+
+**Run:**
+- Double-click `dist/CF-Clean-IP-Scanner.exe` (Tk) — if it doesn't appear, check Task Manager or run the `-Flet` version
+- Or CLI: `python app_tk.py` (Tk) or `python app.py` (Flet) — `python app.py` will open browser at `http://localhost:8599` if desktop client missing
+
+**Troubleshooting "didn't start":**
+- Run console build: `python -m PyInstaller --name CF-Clean-IP-Scanner --console --onefile app_tk.py` then run from `cmd` to see traceback
+- Ensure `config.json` is next to exe (bundled via `--add-data`, but if you move exe alone, keep `config.json` beside it)
+- Antivirus may quarantine PyInstaller exes — add exclusion
 
 ## Build — Android (APK)
 
