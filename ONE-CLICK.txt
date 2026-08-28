@@ -1,0 +1,31 @@
+ONE-CLICK RUN — CF Clean IP Scanner
+==================================
+
+If exe doesn't start (antivirus / extraction delay), use these ONE-CLICK options:
+
+1) EASIEST — Double-click START.bat
+   - Requires Python 3.10+ (you have 3.14)
+   - No exe, no extraction, instant window
+   - File: D:\Vibe Coding\cf-scanner\START.bat
+
+2) HIDDEN — Double-click START-HIDDEN.vbs
+   - Same as above but no black console window
+   - File: START-HIDDEN.vbs
+
+3) PORTABLE EXE — Double-click dist\CF-Clean-IP-Scanner\CF-Clean-IP-Scanner.exe
+   - No Python needed, standalone folder (13 MB)
+   - Unzip CF-Clean-Portable.zip first, then double-click exe inside
+   - Portable zip: C:\Users\meela\AppData\Local\Temp\opencode\CF-Clean-Portable.zip
+   - Also available as single-file: dist\CF-Clean-IP-Scanner.exe (13 MB) — onefile, slower first start
+
+4) ONE-CLICK BAT — Double-click RUN-ONE-CLICK.bat
+   - Tries portable exe, then onefile exe, then Python fallback
+
+If still not starting:
+- Right-click exe -> Properties -> Unblock
+- Windows Defender may quarantine PyInstaller exes — add folder to exclusion: Windows Security -> Virus & threat -> Manage settings -> Exclusions -> Add folder D:\Vibe Coding\cf-scanner\dist
+- Run console debug: dist\CF-Clean-IP-Scanner\CF-Clean-IP-Scanner.exe from cmd to see error
+- Or run: python app_tk.py
+
+All three use same scanner backend (Tk UI, same as Flet but no Flutter download).
+Flet UI (app.py) is for Android; Tk UI (app_tk.py) is for Windows one-click.
